@@ -1101,7 +1101,7 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
 
 /* Purchase and consultation history screen */
 .history-screen {
-    height: 1333px;
+    position: relative;
     background: #fff;
 }
 
@@ -1140,7 +1140,7 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
     inset: 0;
     z-index: 1;
     overflow-y: auto;
-    padding: 133px 21px 32px;
+    padding: 133px 21px 130px;
     scrollbar-width: none;
 }
 
@@ -1399,11 +1399,6 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
 
 .consultation-history-card:focus-visible { outline: 3px solid #d5ff4c; outline-offset: 2px; }
 
-.history-screen .beranda-bottom-nav {
-    top: 766px;
-    bottom: auto;
-}
-
 .history-screen .nav-tab:nth-child(4) { width: 78px; }
 .history-screen .nav-tab.active { width: 81px; }
 
@@ -1420,7 +1415,7 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
 
 /* Profile editing screen */
 .profile-screen {
-    height: 1350px;
+    position: relative;
     background: #fff;
 }
 
@@ -1475,6 +1470,7 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
     z-index: 1;
     inset: 0;
     overflow-y: auto;
+    padding-bottom: 120px;
     scrollbar-width: none;
 }
 
@@ -1617,7 +1613,7 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
     font: 600 12px/18px 'Plus Jakarta Sans', sans-serif;
 }
 
-.profile-screen .beranda-bottom-nav { top: 766px; bottom: auto; z-index: 4; }
+.profile-screen .beranda-bottom-nav { z-index: 4; }
 .profile-screen .nav-tab.active { width: 81px; }
 
 @media (max-width: 360px) {
