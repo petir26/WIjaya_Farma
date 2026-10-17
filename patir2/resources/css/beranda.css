@@ -453,9 +453,11 @@ body.beranda-page {
 }
 
 .empty-results {
-    margin: 24px 8px;
+    margin: 60px 8px 24px;
+    padding: 20px 10px;
     color: var(--color-muted);
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 500;
     text-align: center;
 }
 
@@ -1640,7 +1642,7 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
 }
 .customer-service-header {
     position: absolute;
-    z-index: 2;
+    z-index: 3;
     inset: 0 0 auto;
     height: 120px;
     padding: 14px 23px 0;
@@ -1671,8 +1673,21 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
 }
 .customer-service-back svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round; }
 .customer-service-back:focus-visible { outline: 2px solid var(--color-accent-lime); outline-offset: 4px; border-radius: 5px; }
-.customer-service-content { position: absolute; z-index: 1; inset: 0; min-height: 1050px; overflow-y: auto; scrollbar-width: none; }
+.customer-service-content { 
+    position: absolute; 
+    z-index: 1; 
+    inset: 0; 
+    overflow-y: auto; 
+    scrollbar-width: none; 
+    -webkit-overflow-scrolling: touch; 
+}
 .customer-service-content::-webkit-scrollbar { display: none; }
+.customer-service-content::after {
+    content: '';
+    display: block;
+    height: 1100px;
+    pointer-events: none;
+}
 .customer-service-hero {
     position: absolute;
     top: 140px;
