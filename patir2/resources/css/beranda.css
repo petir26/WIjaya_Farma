@@ -1389,6 +1389,22 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
     font: 300 16px/19px 'Poppins', sans-serif;
 }
 
+.purchase-history-actions {
+    position: absolute;
+    top: 156px;
+    right: 12px;
+    left: 182px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.purchase-history-actions .purchase-pay-trigger,
+.purchase-history-actions .purchase-cancel-trigger {
+    width: 100%;
+    margin: 0;
+}
+
 .consultation-history-list {
     display: flex;
     flex-direction: column;

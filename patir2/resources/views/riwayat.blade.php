@@ -51,8 +51,10 @@
                         @endforeach
                         <time datetime="{{ $order->created_at->toDateString() }}">{{ $order->created_at->translatedFormat('d F Y') }}</time>
                         @if ($order->status === 'menunggu_pembayaran')
-                            <button type="button" class="purchase-pay-trigger" data-show-qr>Bayar</button>
-                            <button type="button" class="purchase-cancel-trigger" data-cancel-order-id="{{ $order->id }}">Batalkan Pesanan</button>
+                            <div class="purchase-history-actions">
+                                <button type="button" class="purchase-pay-trigger" data-show-qr>Bayar</button>
+                                <button type="button" class="purchase-cancel-trigger" data-cancel-order-id="{{ $order->id }}">Batalkan Pesanan</button>
+                            </div>
                         @endif
                         @if ($order->status === 'selesai')
                             @foreach ($order->items as $item)
