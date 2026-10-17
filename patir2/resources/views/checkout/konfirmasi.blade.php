@@ -82,10 +82,14 @@
         <button type="button" class="payment-choice" data-payment="QRIS"><img class="payment-qris-logo" src="{{ asset('images/qris-logo.png') }}" alt=""> QRIS <span>›</span></button>
         <button type="button" class="action-dialog-cancel" data-close-payment>Tutup</button>
     </dialog>
-    <dialog class="checkout-action-dialog" id="order-success-dialog" aria-labelledby="order-success-title">
-        <h2 id="order-success-title">Pesanan berhasil dibuat</h2>
-        <p id="order-success-message">Nomor pesanan akan ditampilkan di sini.</p>
-        <button type="button" class="action-dialog-cancel" id="finish-order">Selesai</button>
+    <dialog class="qr-payment-dialog" id="qr-dialog" aria-labelledby="qr-dialog-title">
+        <div class="qr-payment-card">
+            <button type="button" class="qr-close-btn" id="close-qr-dialog" aria-label="Tutup pembayaran">&times;</button>
+            <div class="qr-image-container">
+                <img id="qr-payment-img" src="{{ asset('images/qris-pembayaran.png') }}" alt="QRIS Apotek WijayaFarma">
+            </div>
+            <button type="button" class="qr-download-btn" id="download-qr-btn">Unduh Gambar</button>
+        </div>
     </dialog>
     <script>
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
@@ -119,6 +123,7 @@
             renderSummary();
         };
         const paymentDialog = document.querySelector('#payment-dialog');
+        const qrDialog = document.querySelector('#qr-dialog');
         document.querySelector('#choose-payment').addEventListener('click', () => paymentDialog.showModal());
         document.querySelector('[data-close-payment]').addEventListener('click', () => paymentDialog.close());
         document.querySelectorAll('[data-payment]').forEach((button) => button.addEventListener('click', () => {
@@ -149,17 +154,41 @@
                 });
                 const result = await response.json();
                 if (!response.ok) { window.alert(result.message || 'Pesanan belum berhasil dibuat.'); return; }
-                document.querySelector('#order-success-message').textContent = `Nomor pesanan: ${result.order.order_number}. Status: ${result.order.status.replaceAll('_', ' ')}.`;
                 orderCart = [];
-                document.querySelector('#order-success-dialog').showModal();
+                qrDialog.showModal();
             } catch (error) {
                 window.alert('Gagal menghubungi server. Coba lagi.');
             } finally {
                 placeOrderButton.disabled = false;
             }
         });
-        document.querySelector('#finish-order').addEventListener('click', () => {
+        document.querySelector('#close-qr-dialog').addEventListener('click', () => {
+            qrDialog.close();
             window.location.href = '{{ route('riwayat') }}';
+        });
+        document.querySelector('#download-qr-btn').addEventListener('click', async () => {
+            const qrImg = document.querySelector('#qr-payment-img');
+            const imageUrl = qrImg.src;
+            try {
+                const res = await fetch(imageUrl);
+                const blob = await res.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = 'QRIS-Pembayaran-WijayaFarma.png';
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                URL.revokeObjectURL(blobUrl);
+            } catch (e) {
+                const link = document.createElement('a');
+                link.href = imageUrl;
+                link.download = 'QRIS-Pembayaran-WijayaFarma.png';
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            }
         });
         const selectedBranch = localStorage.getItem('wijaya-pharmacy-branch');
         if (selectedBranch) document.querySelector('#selected-pharmacy').innerHTML = `Wijaya Farma, Cabang<br>${escapeHtml(selectedBranch)}`;

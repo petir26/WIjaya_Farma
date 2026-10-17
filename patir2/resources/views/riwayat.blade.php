@@ -51,6 +51,7 @@
                         @endforeach
                         <time datetime="{{ $order->created_at->toDateString() }}">{{ $order->created_at->translatedFormat('d F Y') }}</time>
                         @if ($order->status === 'menunggu_pembayaran')
+                            <button type="button" class="purchase-pay-trigger" data-show-qr>Bayar</button>
                             <button type="button" class="purchase-cancel-trigger" data-cancel-order-id="{{ $order->id }}">Batalkan Pesanan</button>
                         @endif
                         @if ($order->status === 'selesai')
@@ -112,7 +113,15 @@
                 <span>Profil</span>
             </a>
         </nav>
-    </div>
+    <dialog class="qr-payment-dialog" id="qr-dialog" aria-labelledby="qr-dialog-title">
+        <div class="qr-payment-card">
+            <button type="button" class="qr-close-btn" id="close-qr-dialog" aria-label="Tutup pembayaran">&times;</button>
+            <div class="qr-image-container">
+                <img id="qr-payment-img" src="{{ asset('images/qris-pembayaran.png') }}" alt="QRIS Apotek WijayaFarma">
+            </div>
+            <button type="button" class="qr-download-btn" id="download-qr-btn">Unduh Gambar</button>
+        </div>
+    </dialog>
 
     <dialog class="history-review-dialog" id="history-review-dialog" aria-labelledby="history-review-title">
         <form id="history-review-form">
@@ -174,6 +183,38 @@
             window.alert(result.message || 'Pesanan belum berhasil dibatalkan.');
             if (response.ok) window.location.reload();
         }));
+
+        const qrDialog = document.querySelector('#qr-dialog');
+        document.querySelectorAll('[data-show-qr]').forEach((btn) => {
+            btn.addEventListener('click', () => qrDialog.showModal());
+        });
+        document.querySelector('#close-qr-dialog').addEventListener('click', () => {
+            qrDialog.close();
+        });
+        document.querySelector('#download-qr-btn').addEventListener('click', async () => {
+            const qrImg = document.querySelector('#qr-payment-img');
+            const imageUrl = qrImg.src;
+            try {
+                const res = await fetch(imageUrl);
+                const blob = await res.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = 'QRIS-Pembayaran-WijayaFarma.png';
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                URL.revokeObjectURL(blobUrl);
+            } catch (e) {
+                const link = document.createElement('a');
+                link.href = imageUrl;
+                link.download = 'QRIS-Pembayaran-WijayaFarma.png';
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            }
+        });
     </script>
 </body>
 </html>
