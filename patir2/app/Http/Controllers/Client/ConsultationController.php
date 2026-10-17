@@ -18,12 +18,24 @@ class ConsultationController extends Controller
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'doctor_name' => ['required', Rule::in(['Dr. Jon D Ojan', 'Ir. Dr. Syarif', 'Dr. Fatir D H'])],
-            'complaint' => ['required', 'string', 'min:5', 'max:5000'],
+            'doctor_name' => ['required', Rule::in(['Dr. Jon D Ojan', 'Ir. Dr. Syarif', 'Dr. Fatir D H', 'Customer Service'])],
+            'complaint' => ['required', 'string', 'min:1', 'max:5000'],
         ]);
+
+        if ($data['doctor_name'] === 'Customer Service') {
+            $data['status'] = 'dibalas';
+        }
 
         $consultation = $request->user()->consultations()->create($data);
         $consultation->messages()->create(['user_id' => $request->user()->id, 'sender_type' => 'client', 'message' => $data['complaint']]);
+
+        if ($data['doctor_name'] === 'Customer Service') {
+            $consultation->messages()->create([
+                'user_id' => null,
+                'sender_type' => 'doctor',
+                'message' => 'Terimakasih sudah menghubungi Customer Service! Silahkan tuliskan keluhan anda.',
+            ]);
+        }
 
         return response()->json(['message' => 'Konsultasi berhasil dibuat.', 'consultation' => $consultation->load('messages')], 201);
     }

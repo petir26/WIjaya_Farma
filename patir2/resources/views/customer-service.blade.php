@@ -32,10 +32,10 @@
             <section class="customer-service-hero" aria-labelledby="cs-greeting">
                 <h2 id="cs-greeting">Halo! Ada yang bisa kami bantu?</h2>
                 <p>Tanyakan apa saja kepada Admin kami untuk jawaban mengenai masalah layanan kesehatan Anda.</p>
-                <button class="customer-service-chat-button" type="button" id="open-admin-chat">
+                <a class="customer-service-chat-button" href="{{ route('customer-service.chat') }}" id="open-admin-chat">
                     <img src="{{ asset('images/customer-service/support.png') }}" alt="">
                     <span>Mulai Chat Dengan Admin</span>
-                </button>
+                </a>
             </section>
 
             <section class="customer-service-quick" aria-labelledby="quick-help-title">
@@ -83,67 +83,5 @@
             </section>
         </main>
     </div>
-
-    <dialog class="customer-service-dialog" id="admin-chat-dialog" aria-labelledby="admin-chat-title">
-        <h2 id="admin-chat-title">Chat Admin</h2>
-        <p>Pesan Anda tersimpan. Balasan akan ditampilkan setelah fitur Admin tersedia.</p>
-        <div id="customer-service-messages" class="customer-service-messages" aria-live="polite"></div>
-        <form id="customer-service-message-form">
-            <label class="visually-hidden" for="customer-service-message">Pesan untuk Admin</label>
-            <textarea id="customer-service-message" name="message" rows="3" maxlength="5000" placeholder="Tulis pesan..." required></textarea>
-            <button type="submit" id="send-customer-service-message">Kirim</button>
-            <button type="button" id="close-admin-chat">Tutup</button>
-        </form>
-    </dialog>
-    <script>
-        const adminChatDialog = document.querySelector('#admin-chat-dialog');
-        const customerServiceMessages = document.querySelector('#customer-service-messages');
-        const customerServiceForm = document.querySelector('#customer-service-message-form');
-        const customerServiceInput = document.querySelector('#customer-service-message');
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-        const renderCustomerServiceMessages = async () => {
-            const response = await fetch('{{ route('client.customer-service.index') }}', { headers: { 'Accept': 'application/json' } });
-            if (!response.ok) return;
-            const result = await response.json();
-            customerServiceMessages.replaceChildren();
-            result.messages.data.forEach((item) => {
-                const message = document.createElement('p');
-                message.className = 'customer-service-message customer-service-message--client';
-                message.textContent = item.message;
-                customerServiceMessages.append(message);
-                if (item.admin_reply) {
-                    const reply = document.createElement('p');
-                    reply.className = 'customer-service-message customer-service-message--admin';
-                    reply.textContent = item.admin_reply;
-                    customerServiceMessages.append(reply);
-                }
-            });
-        };
-        document.querySelector('#open-admin-chat').addEventListener('click', () => {
-            adminChatDialog.showModal();
-            renderCustomerServiceMessages();
-        });
-        document.querySelector('#close-admin-chat').addEventListener('click', () => adminChatDialog.close());
-        customerServiceForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const sendButton = document.querySelector('#send-customer-service-message');
-            sendButton.disabled = true;
-            try {
-                const response = await fetch('{{ route('client.customer-service.store') }}', {
-                    method: 'POST',
-                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
-                    body: JSON.stringify({ message: customerServiceInput.value.trim() }),
-                });
-                const result = await response.json();
-                if (!response.ok) { window.alert(result.message || 'Pesan gagal dikirim.'); return; }
-                customerServiceInput.value = '';
-                await renderCustomerServiceMessages();
-            } catch (error) {
-                window.alert('Gagal menghubungi server. Coba lagi.');
-            } finally {
-                sendButton.disabled = false;
-            }
-        });
-    </script>
 </body>
 </html>

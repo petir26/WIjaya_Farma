@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::view('/konsultasi', 'konsultasi')->name('konsultasi');
     Route::get('/riwayat', [HistoryController::class, 'index'])->name('riwayat');
     Route::view('/customer-service', 'customer-service')->name('customer-service');
+    Route::view('/customer-service/chat', 'customer-service-chat')->name('customer-service.chat');
     Route::get('/konsultasi/chat/{dokter}', function (string $dokter) {
         $doctors = [
             'jon-d-ojan' => ['name' => 'Dr. Jon D Ojan', 'image' => 'dr-jon.png'],
