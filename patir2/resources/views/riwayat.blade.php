@@ -28,9 +28,11 @@
         </header>
 
         <main class="history-content">
-            <div class="history-tabs" role="tablist" aria-label="Jenis riwayat">
-                <button class="history-tab is-selected" id="purchases-tab" type="button" role="tab" aria-selected="true" aria-controls="purchases-panel">Pembelian</button>
-                <button class="history-tab" id="consultations-tab" type="button" role="tab" aria-selected="false" aria-controls="consultations-panel">Konsultasi</button>
+            <div class="history-tabs-wrapper">
+                <div class="history-tabs" role="tablist" aria-label="Jenis riwayat">
+                    <button class="history-tab is-selected" id="purchases-tab" type="button" role="tab" aria-selected="true" aria-controls="purchases-panel">Pembelian</button>
+                    <button class="history-tab" id="consultations-tab" type="button" role="tab" aria-selected="false" aria-controls="consultations-panel">Konsultasi</button>
+                </div>
             </div>
 
             <section class="history-panel" id="purchases-panel" role="tabpanel" aria-labelledby="purchases-tab">

@@ -1142,11 +1142,19 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
     inset: 0;
     z-index: 1;
     overflow-y: auto;
-    padding: 133px 21px 130px;
+    padding: 119px 21px 130px;
     scrollbar-width: none;
 }
 
 .history-content::-webkit-scrollbar { display: none; }
+
+.history-tabs-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 14px 0 10px;
+    background: #fff;
+}
 
 .history-tabs {
     position: relative;
@@ -1183,7 +1191,7 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
 
 .history-tab:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
-.history-panel { margin-top: 16px; }
+.history-panel { margin-top: 10px; }
 
 .purchase-history-card {
     position: relative;
