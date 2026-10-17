@@ -65,12 +65,15 @@
             <section class="history-panel consultation-history-panel" id="consultations-panel" role="tabpanel" aria-labelledby="consultations-tab" hidden>
                 <div class="consultation-history-list">
                     @forelse ($consultations as $consultation)
+                        @php($isCS = $consultation->doctor_name === 'Customer Service')
                         @php($doctorSlug = ['Dr. Jon D Ojan' => 'jon-d-ojan', 'Ir. Dr. Syarif' => 'syarif', 'Dr. Fatir D H' => 'fatir-d-h'][$consultation->doctor_name] ?? 'syarif')
                         @php($doctorImage = ['Dr. Jon D Ojan' => 'dr-jon.png', 'Ir. Dr. Syarif' => 'dr-syarif.png', 'Dr. Fatir D H' => 'dr-fatir.png'][$consultation->doctor_name] ?? 'dr-syarif.png')
-                        <a class="consultation-history-card" href="{{ route('konsultasi.chat', $doctorSlug) }}?consultation={{ $consultation->id }}" aria-label="Buka konsultasi dengan {{ $consultation->doctor_name }}">
-                            <img class="consultation-history-avatar" src="{{ asset('images/konsultasi/'.$doctorImage) }}" alt="">
+                        @php($chatUrl = $isCS ? route('customer-service.chat', ['consultation' => $consultation->id]) : route('konsultasi.chat', $doctorSlug).'?consultation='.$consultation->id)
+                        @php($avatarSrc = $isCS ? asset('images/support.png') : asset('images/konsultasi/'.$doctorImage))
+                        <a class="consultation-history-card" href="{{ $chatUrl }}" aria-label="Buka konsultasi dengan {{ $consultation->doctor_name }}">
+                            <img class="consultation-history-avatar" src="{{ $avatarSrc }}" alt="" @if($isCS) style="object-fit: contain; padding: 3px; background: rgba(30, 45, 99, 0.1);" @endif>
                             <h2>{{ $consultation->doctor_name }}</h2>
-                            <p class="consultation-history-specialty">Dokter Umum</p>
+                            <p class="consultation-history-specialty">{{ $isCS ? 'Admin Support' : 'Dokter Umum' }}</p>
                             <p class="consultation-history-time">{{ $consultation->updated_at->format('H.i') }} WITA</p>
                             <div class="consultation-history-status consultation-history-status--sent">
                                 <span class="consultation-status-dot" aria-hidden="true"></span>

@@ -11,15 +11,31 @@ class CustomerServiceController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        return response()->json(['messages' => $request->user()->customerServiceMessages()->latest()->paginate(10)]);
+        $messages = $request->user()->customerServiceMessages()->oldest()->get();
+
+        return response()->json(['messages' => $messages]);
     }
 
     public function store(Request $request): JsonResponse
     {
-        $data = $request->validate(['message' => ['required', 'string', 'min:3', 'max:5000']]);
+        $data = $request->validate(['message' => ['required', 'string', 'min:1', 'max:5000']]);
+        
+        $hasPriorMessages = $request->user()->customerServiceMessages()->exists();
+        
+        // Auto-reply jika ini pesan pertama
+        if (!$hasPriorMessages) {
+            $data['admin_reply'] = 'Terimakasih sudah menghubungi Customer Service! Silahkan tuliskan keluhan anda.';
+            $data['status'] = 'dibalas';
+        }
+
         $message = $request->user()->customerServiceMessages()->create($data);
 
-        return response()->json(['message' => 'Pesan bantuan berhasil dikirim.', 'item' => $message], 201);
+        return response()->json([
+            'message' => 'Pesan bantuan berhasil dikirim.', 
+            'item' => $message,
+            'is_first' => !$hasPriorMessages,
+            'auto_reply' => !$hasPriorMessages ? $data['admin_reply'] : null
+        ], 201);
     }
 
     public function destroy(Request $request, CustomerServiceMessage $message): JsonResponse
