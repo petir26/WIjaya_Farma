@@ -6,6 +6,9 @@
         @if ($errors->any())
             <p class="auth-feedback" role="alert">{{ $errors->first() }}</p>
         @endif
+        @if (session('status'))
+            <p class="auth-feedback" role="status">{{ session('status') }}</p>
+        @endif
         <div class="auth-fields">
             <label class="sr-only" for="email">Email</label>
             <input

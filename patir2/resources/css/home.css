@@ -324,3 +324,31 @@
         font-size: 10px;
     }
 }
+
+/* Shared background pattern from the Figma history screen. */
+:root {
+    --app-figma-pattern: url('/images/background-figma.png');
+}
+
+.beranda-screen,
+.home-screen,
+.auth-screen,
+.order-confirm-screen,
+.address-picker-screen,
+.product-detail-screen {
+    background-color: #fff;
+    background-image:
+        linear-gradient(rgb(255 255 255 / 0%), rgb(255 255 255 / 0%)),
+        var(--app-figma-pattern);
+    background-position: center, left top;
+    background-repeat: no-repeat, repeat;
+    background-size: 100% 100%, 102px 51px;
+}
+
+.consultation-screen::before,
+.doctor-chat-screen::before,
+.history-screen::before,
+.profile-screen::before,
+.customer-service-screen::before {
+    display: none;
+}

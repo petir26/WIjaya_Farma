@@ -10,7 +10,10 @@ class EnsureUserHasRole
 {
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        abort_unless($request->user()?->role === $role, 403);
+        $actualRole = $request->user()?->role;
+        $allowedRoles = $role === 'doctor' ? ['doctor', 'dokter'] : [$role];
+
+        abort_unless(in_array($actualRole, $allowedRoles, true), 403);
 
         return $next($request);
     }

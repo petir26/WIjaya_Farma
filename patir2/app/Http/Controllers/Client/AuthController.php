@@ -28,6 +28,9 @@ class AuthController extends Controller
         if ($request->user()->role === 'admin') {
             return redirect()->route('admin.toko');
         }
+        if (in_array($request->user()->role, ['doctor', 'dokter'], true)) {
+            return redirect()->route('doctor.consultations.index');
+        }
 
         return redirect()->intended(route('beranda'));
     }
@@ -43,10 +46,8 @@ class AuthController extends Controller
         $client = new User($data);
         $client->role = 'user';
         $client->save();
-        Auth::login($client);
-        $request->session()->regenerate();
 
-        return redirect()->route('beranda');
+        return redirect()->route('login')->with('status', 'Akun berhasil dibuat. Silakan login untuk melanjutkan.');
     }
 
     public function logout(Request $request): RedirectResponse
