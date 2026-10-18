@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class StoreController extends Controller
 {
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
+        if (Auth::user()?->role === 'admin') {
+            return redirect()->route('admin.toko');
+        }
+
         $products = Product::query()->where('is_active', true)->orderBy('name')->get()->map(fn (Product $product) => [
             'id' => $product->id,
             'name' => $product->name,
@@ -25,8 +31,12 @@ class StoreController extends Controller
         return view('toko', ['products' => $products]);
     }
 
-    public function showMedicine(string $obat): View
+    public function showMedicine(string $obat): View|RedirectResponse
     {
+        if (Auth::user()?->role === 'admin') {
+            return redirect()->route('admin.toko');
+        }
+
         $product = Product::query()->where('slug', $obat)->where('is_active', true)->firstOrFail();
 
         return view('informasi-obat.show', ['medicine' => [
