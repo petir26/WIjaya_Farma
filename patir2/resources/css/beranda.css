@@ -1741,9 +1741,51 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
 .profile-screen .beranda-bottom-nav { z-index: 4; }
 .profile-screen .nav-tab.active { width: 81px; }
 
+.profile-form--admin {
+    display: flex;
+    height: auto;
+    min-height: 100%;
+    flex-direction: column;
+    gap: 18px;
+    padding: 154px 32px 120px;
+    box-sizing: border-box;
+}
+
+.profile-form--admin .profile-avatar {
+    position: relative;
+    top: auto;
+    left: auto;
+    flex: 0 0 84px;
+    margin: 0 auto 8px;
+    transform: none;
+}
+
+.profile-form--admin .profile-field {
+    position: static;
+    width: 100%;
+}
+
+.profile-form--admin .profile-field label { margin-bottom: 8px; }
+
+.profile-form--admin .profile-logout {
+    position: static;
+    width: 61px;
+    height: 58px;
+    align-self: flex-end;
+    margin-top: 4px;
+    padding: 0;
+    border-radius: 25px;
+    background: #172256;
+    box-shadow: 0 4px 12px rgb(18 27 78 / 20%);
+    cursor: pointer;
+}
+
+.profile-form--admin .profile-logout svg { width: 30px; height: 30px; stroke: #fa4b42; }
+
 @media (max-width: 360px) {
     .profile-support-link { right: 22px; }
     .profile-field { left: 26px; width: calc(100% - 52px); }
+    .profile-form--admin { padding-right: 26px; padding-left: 26px; }
     .profile-field--medical-history { left: 22px; width: calc(100% - 44px); }
     .profile-field--address { left: 25px; width: calc(100% - 47px); }
     .profile-measurements { left: 26px; width: calc(100% - 52px); grid-template-columns: minmax(0, 121px) minmax(0, 121px); gap: 12px; }

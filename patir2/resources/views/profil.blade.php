@@ -33,7 +33,7 @@
         </header>
 
         <main class="profile-content">
-            <form class="profile-form" id="profile-form" autocomplete="on">
+            <form class="profile-form {{ auth()->user()->role === 'admin' ? 'profile-form--admin' : '' }}" id="profile-form" autocomplete="on">
                 <div class="profile-avatar" aria-label="Foto profil">
                     <svg viewBox="0 0 84 84" aria-hidden="true">
                         <circle cx="42" cy="42" r="32" />
@@ -57,42 +57,44 @@
                     <input id="profile-phone" name="phone" type="tel" autocomplete="tel" value="{{ old('phone', $client->phone) }}">
                 </div>
 
-                <div class="profile-field profile-field--blood">
-                    <label for="profile-blood">Golongan Darah :</label>
-                    <select id="profile-blood" name="blood_type" aria-label="Golongan darah">
-                        <option value=""></option>
-                        @foreach (['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as $bloodType)
-                            <option value="{{ $bloodType }}" @selected(old('blood_type', $client->blood_type) === $bloodType)>{{ $bloodType }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                @if (auth()->user()->role !== 'admin')
+                    <div class="profile-field profile-field--blood">
+                        <label for="profile-blood">Golongan Darah :</label>
+                        <select id="profile-blood" name="blood_type" aria-label="Golongan darah">
+                            <option value=""></option>
+                            @foreach (['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as $bloodType)
+                                <option value="{{ $bloodType }}" @selected(old('blood_type', $client->blood_type) === $bloodType)>{{ $bloodType }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <div class="profile-measurements">
-                    <div class="profile-field profile-field--weight">
-                        <label for="profile-weight">Berat Badan :</label>
-                        <div class="profile-input-with-unit">
-                            <input id="profile-weight" name="weight_kg" type="number" min="0" step="0.1" inputmode="decimal" value="{{ old('weight_kg', $client->weight_kg) }}">
-                            <span>Kg</span>
+                    <div class="profile-measurements">
+                        <div class="profile-field profile-field--weight">
+                            <label for="profile-weight">Berat Badan :</label>
+                            <div class="profile-input-with-unit">
+                                <input id="profile-weight" name="weight_kg" type="number" min="0" step="0.1" inputmode="decimal" value="{{ old('weight_kg', $client->weight_kg) }}">
+                                <span>Kg</span>
+                            </div>
+                        </div>
+                        <div class="profile-field profile-field--height">
+                            <label for="profile-height">Tinggi Badan :</label>
+                            <div class="profile-input-with-unit">
+                                <input id="profile-height" name="height_cm" type="number" min="0" step="0.1" inputmode="decimal" value="{{ old('height_cm', $client->height_cm) }}">
+                                <span>Cm</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="profile-field profile-field--height">
-                        <label for="profile-height">Tinggi Badan :</label>
-                        <div class="profile-input-with-unit">
-                            <input id="profile-height" name="height_cm" type="number" min="0" step="0.1" inputmode="decimal" value="{{ old('height_cm', $client->height_cm) }}">
-                            <span>Cm</span>
-                        </div>
+
+                    <div class="profile-field profile-field--medical-history">
+                        <label for="profile-medical-history">Riwayat Penyakit :</label>
+                        <textarea id="profile-medical-history" name="medical_history" rows="3">{{ old('medical_history', $client->medical_history) }}</textarea>
                     </div>
-                </div>
 
-                <div class="profile-field profile-field--medical-history">
-                    <label for="profile-medical-history">Riwayat Penyakit :</label>
-                    <textarea id="profile-medical-history" name="medical_history" rows="3">{{ old('medical_history', $client->medical_history) }}</textarea>
-                </div>
-
-                <div class="profile-field profile-field--address">
-                    <label for="profile-address">Alamat :</label>
-                    <textarea id="profile-address" name="address" rows="4" autocomplete="street-address">{{ old('address', $client->address) }}</textarea>
-                </div>
+                    <div class="profile-field profile-field--address">
+                        <label for="profile-address">Alamat :</label>
+                        <textarea id="profile-address" name="address" rows="4" autocomplete="street-address">{{ old('address', $client->address) }}</textarea>
+                    </div>
+                @endif
 
                 <button class="profile-logout" type="submit" form="logout-form" aria-label="Keluar">
                     <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M14 6H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h7M18 10l7 6-7 6M11 16h14" /></svg>

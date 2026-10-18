@@ -63,6 +63,14 @@ class AdminProductManagementTest extends TestCase
         $this->get(route('profil'))
             ->assertOk()
             ->assertSee('aria-label="Navigasi admin"', false)
+            ->assertSee('Nama Pengguna')
+            ->assertSee('Email')
+            ->assertSee('Nomor Telepon')
+            ->assertSee('aria-label="Keluar"', false)
+            ->assertDontSee('Golongan Darah')
+            ->assertDontSee('Berat Badan')
+            ->assertDontSee('Riwayat Penyakit')
+            ->assertDontSee('Alamat :')
             ->assertDontSee('<span>Beranda</span>', false)
             ->assertDontSee('<span>Riwayat</span>', false);
 
