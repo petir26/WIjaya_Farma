@@ -11,21 +11,26 @@ use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\PrescriptionController;
 use App\Http\Controllers\Client\ReviewController;
+use App\Http\Controllers\Doctor\ConsultationController as DoctorConsultationController;
+use App\Http\Controllers\Doctor\ProfileController as DoctorProfileController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\StoreController;
 use Illuminate\Http\Request;
 
-Route::redirect('/', '/beranda');
+Route::redirect('/', '/login');
 
 Route::get('/beranda', function (Request $request) {
     if ($request->user()?->role === 'admin') {
         return redirect()->route('admin.toko');
     }
+    if (in_array($request->user()?->role, ['doctor', 'dokter'], true)) {
+        return redirect()->route('doctor.consultations.index');
+    }
 
     return view('beranda');
-})->name('beranda');
-Route::get('/toko', [StoreController::class, 'index'])->name('toko');
-Route::get('/informasi-obat/{obat}', [StoreController::class, 'showMedicine'])->name('informasi-obat.show');
+})->middleware(['auth', 'admin.interface'])->name('beranda');
+Route::get('/toko', [StoreController::class, 'index'])->middleware(['auth', 'admin.interface'])->name('toko');
+Route::get('/informasi-obat/{obat}', [StoreController::class, 'showMedicine'])->middleware(['auth', 'admin.interface'])->name('informasi-obat.show');
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/toko', [AdminProductController::class, 'index'])->name('toko');
@@ -46,11 +51,19 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth', 'admin.interface'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/profil', [ProfileController::class, 'show'])->name('profil');
+    Route::get('/profil', function (Request $request) {
+        if (in_array($request->user()->role, ['doctor', 'dokter'], true)) {
+            return redirect()->route('doctor.profile');
+        }
+
+        return app(ProfileController::class)->show($request);
+    })->name('profil');
     Route::patch('/profil', [ProfileController::class, 'update'])->name('profil.update');
-    Route::get('/konsultasi', fn (Request $request) => $request->user()->role === 'admin'
-        ? redirect()->route('admin.toko')
-        : view('konsultasi'))->name('konsultasi');
+    Route::get('/konsultasi', fn (Request $request) => match ($request->user()->role) {
+        'admin' => redirect()->route('admin.toko'),
+        'doctor', 'dokter' => redirect()->route('doctor.consultations.index'),
+        default => view('konsultasi'),
+    })->name('konsultasi');
     Route::get('/riwayat', [HistoryController::class, 'index'])->name('riwayat');
     Route::get('/riwayat/{order}', [HistoryController::class, 'showOrder'])->whereNumber('order')->name('riwayat.detail');
     Route::view('/customer-service', 'customer-service')->name('customer-service');
@@ -103,4 +116,13 @@ Route::middleware(['auth', 'admin.interface'])->group(function () {
         Route::post('/customer-service/messages', [CustomerServiceController::class, 'store'])->name('customer-service.store');
         Route::delete('/customer-service/messages/{message}', [CustomerServiceController::class, 'destroy'])->name('customer-service.destroy');
     });
+});
+
+Route::prefix('dokter')->name('doctor.')->middleware(['auth', 'role:doctor'])->group(function () {
+    Route::get('/profil', [DoctorProfileController::class, 'show'])->name('profile');
+    Route::patch('/profil', [DoctorProfileController::class, 'update'])->name('profile.update');
+    Route::get('/konsultasi', [DoctorConsultationController::class, 'index'])->name('consultations.index');
+    Route::get('/konsultasi/{consultation}', [DoctorConsultationController::class, 'show'])->name('consultations.show');
+    Route::post('/konsultasi/{consultation}/pesan', [DoctorConsultationController::class, 'reply'])->name('consultations.reply');
+    Route::get('/pesan/{message}/lampiran', [DoctorConsultationController::class, 'attachment'])->name('consultations.attachment');
 });
