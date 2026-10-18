@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Client\AuthController;
+use App\Http\Controllers\Client\AddressController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\ConsultationController;
 use App\Http\Controllers\Client\CustomerServiceController;
@@ -31,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profil', [ProfileController::class, 'update'])->name('profil.update');
     Route::view('/konsultasi', 'konsultasi')->name('konsultasi');
     Route::get('/riwayat', [HistoryController::class, 'index'])->name('riwayat');
+    Route::get('/riwayat/{order}', [HistoryController::class, 'showOrder'])->whereNumber('order')->name('riwayat.detail');
     Route::view('/customer-service', 'customer-service')->name('customer-service');
     Route::view('/customer-service/chat', 'customer-service-chat')->name('customer-service.chat');
     Route::get('/konsultasi/chat/{dokter}', function (string $dokter) {
@@ -46,7 +48,7 @@ Route::middleware('auth')->group(function () {
     })->name('konsultasi.chat');
     Route::view('/checkout', 'checkout')->name('checkout');
     Route::view('/checkout/konfirmasi', 'checkout.konfirmasi')->name('checkout.confirmation');
-    Route::view('/checkout/alamat', 'checkout.alamat')->name('checkout.address');
+    Route::get('/checkout/alamat', [AddressController::class, 'page'])->name('checkout.address');
 
     Route::prefix('client')->name('client.')->group(function () {
         Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -58,6 +60,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/prescriptions/{prescription}/file', [PrescriptionController::class, 'download'])->name('prescriptions.download');
         Route::delete('/prescriptions/{prescription}', [PrescriptionController::class, 'destroy'])->name('prescriptions.destroy');
         Route::get('/profile', [ProfileController::class, 'data'])->name('profile.show');
+        Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
+        Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
+        Route::patch('/addresses/{address}', [AddressController::class, 'update'])->name('addresses.update');
+        Route::patch('/addresses/{address}/select', [AddressController::class, 'select'])->name('addresses.select');
+        Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
         Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
         Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
         Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');

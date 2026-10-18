@@ -30,13 +30,18 @@ class OrderController extends Controller
         $data = $request->validate([
             'fulfillment_method' => ['required', Rule::in(['delivery', 'pickup'])],
             'shipping_address' => ['nullable', 'string', 'max:2000'],
+            'saved_address_id' => ['nullable', 'integer', 'exists:saved_addresses,id'],
             'pharmacy_branch' => ['nullable', 'string', 'max:120'],
             'payment_method' => ['required', Rule::in(['OVO', 'GoPay', 'QRIS'])],
             'prescription_ids' => ['nullable', 'array'],
             'prescription_ids.*' => ['integer', 'exists:prescriptions,id'],
         ]);
         $client = $request->user();
-        $address = $data['shipping_address'] ?? $client->address;
+        $savedAddress = null;
+        if ($data['fulfillment_method'] === 'delivery' && ! empty($data['saved_address_id'])) {
+            $savedAddress = $client->savedAddresses()->findOrFail($data['saved_address_id']);
+        }
+        $address = $savedAddress?->address ?? $data['shipping_address'] ?? $client->address;
 
         if ($data['fulfillment_method'] === 'pickup' && blank($data['pharmacy_branch'] ?? null)) {
             return response()->json(['message' => 'Pilih cabang apotek untuk pengambilan pesanan.'], 422);

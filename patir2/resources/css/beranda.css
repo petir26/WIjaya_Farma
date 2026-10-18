@@ -1899,6 +1899,58 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
 .history-review-dialog select, .history-review-dialog textarea { padding: 9px; border: 1px solid #d5e4ff; border-radius: 8px; font: 14px/1.4 var(--font-jakarta); }
 .history-review-dialog button { padding: 9px 14px; border: 0; border-radius: 8px; background: #121b4e; color: #fff; cursor: pointer; }
 .history-review-dialog #close-history-review { background: #eef1f8; color: #121b4e; }
+
+/* Purchase history: keep one compact card per transaction, regardless of item count. */
+.purchase-history-card {
+    display: grid;
+    width: min(100%, 335px);
+    height: auto;
+    min-height: 0;
+    gap: 12px;
+    margin: 0 auto 14px;
+    padding: 15px 14px;
+    overflow: visible;
+}
+.purchase-history-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.purchase-history-card .purchase-history-heading h2 { position: static; min-width: 0; overflow: hidden; font: 600 14px/1.3 'Plus Jakarta Sans', sans-serif; text-overflow: ellipsis; white-space: nowrap; }
+.purchase-history-card .purchase-status { position: static; flex: 0 0 auto; font: 500 10px/1.3 'Plus Jakarta Sans', sans-serif; }
+.purchase-history-preview { display: grid; min-width: 0; grid-template-columns: 78px minmax(0, 1fr); align-items: center; gap: 12px; color: inherit; text-decoration: none; }
+.purchase-history-card .purchase-history-image { position: static; width: 78px; height: 78px; border-radius: 12px; background: #f6f7fb; object-fit: contain; }
+.purchase-history-card .purchase-history-details { position: static; min-width: 0; gap: 3px; }
+.purchase-history-card .purchase-history-category { padding: 3px 7px; font-size: 8px; }
+.purchase-history-product-name { max-width: 100%; overflow: hidden; color: #1b1b1f; font: 600 13px/1.3 'Plus Jakarta Sans', sans-serif; text-overflow: ellipsis; white-space: nowrap; }
+.purchase-history-quantity, .purchase-history-extra { color: #767681; font: 500 10px/1.4 'Plus Jakarta Sans', sans-serif; }
+.purchase-history-extra { color: #1b295e; }
+.purchase-history-footer { display: flex; align-items: end; justify-content: space-between; gap: 8px; padding-top: 9px; border-top: 1px solid #edf0f6; }
+.purchase-history-footer > div { display: grid; gap: 3px; }
+.purchase-history-card .purchase-history-footer time { position: static; color: #767681; font: 500 10px/1.3 'Plus Jakarta Sans', sans-serif; }
+.purchase-history-total { color: #04164d; font: 700 12px/1.35 'Plus Jakarta Sans', sans-serif; }
+.purchase-detail-link { flex: 0 0 auto; align-self: end; padding: 9px 12px; border-radius: 9px; background: #d5ff4c; box-shadow: 0 2px 4px rgb(0 0 0 / 14%); color: #1b295e; font: 700 10px/1.2 'Plus Jakarta Sans', sans-serif; text-decoration: none; }
+.purchase-history-actions { position: static; display: flex; flex-direction: row; flex-wrap: wrap; gap: 6px; }
+.purchase-history-actions .purchase-pay-trigger, .purchase-history-actions .purchase-cancel-trigger { width: auto; margin: 0; }
+
+.history-detail-header { display: flex; align-items: end; justify-content: center; }
+.history-detail-header h1 { margin: 10px 0 0; }
+.history-back-link { position: absolute; bottom: 19px; left: 20px; display: inline-flex; align-items: center; gap: 6px; color: #fff; font: 600 13px/1.2 'Plus Jakarta Sans', sans-serif; text-decoration: none; }
+.history-back-link span { font-size: 22px; line-height: .8; }
+.history-detail-content { display: grid; align-content: start; gap: 13px; }
+.history-detail-card { width: min(100%, 335px); margin: 0 auto; padding: 16px; border: 1px solid #879cb5; border-radius: 19px; background: #fff; }
+.history-detail-card h2 { margin: 0 0 12px; color: #121b4e; font: 700 15px/1.35 'Plus Jakarta Sans', sans-serif; }
+.history-detail-summary { display: grid; grid-template-columns: 1fr auto; gap: 9px 12px; margin: 0; font: 500 12px/1.4 'Plus Jakarta Sans', sans-serif; }
+.history-detail-summary dt { color: #767681; }
+.history-detail-summary dd { margin: 0; color: #1b1b1f; text-align: right; }
+.history-detail-summary .history-detail-total { color: #04164d; font-size: 14px; font-weight: 700; }
+.history-detail-items { display: grid; gap: 13px; }
+.history-detail-item { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid #dfe4ee; }
+.history-detail-item + .history-detail-item { padding-top: 12px; }
+.history-detail-item:last-child { padding-bottom: 0; border-bottom: 0; }
+.history-detail-item img { width: 64px; height: 64px; border-radius: 10px; background: #f6f7fb; object-fit: contain; }
+.history-detail-item h3 { margin: 0 0 4px; color: #1b1b1f; font: 600 12px/1.35 'Plus Jakarta Sans', sans-serif; }
+.history-detail-item p { margin: 0; color: #767681; font: 500 10px/1.4 'Plus Jakarta Sans', sans-serif; }
+.history-detail-item strong { color: #04164d; font: 700 11px/1.35 'Plus Jakarta Sans', sans-serif; text-align: right; }
+.history-detail-prescription { display: block; margin-top: 8px; color: #1b295e; font: 600 11px/1.4 'Plus Jakarta Sans', sans-serif; }
+.history-detail-note { margin: 0; color: #767681; font: 400 11px/1.5 'Plus Jakarta Sans', sans-serif; }
+
 @media (max-width: 360px) {
     .customer-service-header h1 { left: 64px; font-size: 19px; }
     .quick-help-grid { left: 25px; width: calc(100% - 50px); gap: 12px 10px; }
@@ -1954,3 +2006,46 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
         font-size: 14px;
     }
 }
+
+#address-google-map { position: absolute; inset: 0; z-index: 0; display: none; }
+.address-picker-screen.has-google-map #address-google-map { display: block; }
+.address-map-image[hidden], .address-map-pin[hidden] { display: none; }
+.address-map-search { position: absolute; top: 126px; right: 18px; left: 18px; z-index: 2; }
+#place-autocomplete-slot:empty { display: none; }
+#place-autocomplete-slot gmp-place-autocomplete { width: 100%; max-width: none; --gmp-mat-sys-color-surface: #fff; --gmp-mat-sys-color-on-surface: #121b4e; }
+.address-manual-search { display: flex; height: 46px; align-items: center; gap: 8px; padding: 4px 5px 4px 14px; border: 1px solid #dce2ee; border-radius: 13px; background: #fff; box-shadow: 0 3px 10px rgb(18 31 77 / 16%); }
+.address-manual-search input { min-width: 0; flex: 1; border: 0; outline: 0; color: #121b4e; font: 500 12px/1.4 var(--font-jakarta); }
+.address-manual-search button { padding: 9px 14px; border: 0; border-radius: 9px; background: #121b4e; color: #fff; font: 700 11px/1 var(--font-jakarta); cursor: pointer; }
+.address-book-sheet { height: min(440px, 55vh); min-height: 280px; transition: height .22s ease; }
+.address-book-sheet.is-dragging { transition: none; }
+.address-book-sheet .sheet-handle { border: 0; padding: 0; cursor: ns-resize; touch-action: none; }
+.address-book-sheet .sheet-handle:focus-visible { outline: 2px solid #1b295e; outline-offset: 3px; }
+.address-book-content { position: absolute; inset: 28px 0 0; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding: 0 20px 15px; scrollbar-width: thin; }
+.address-book-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.address-book-heading h2 { margin: 0; color: #121b4e; font: 700 18px/1.3 var(--font-jakarta); }
+.address-book-heading p { margin: 3px 0 0; color: #727887; font: 400 10px/1.4 var(--font-jakarta); }
+.address-add-trigger { flex: 0 0 38px; width: 38px; height: 38px; border: 0; border-radius: 13px; background: #d5ff4c; color: #1b295e; font: 500 28px/1 var(--font-jakarta); cursor: pointer; }
+.maps-key-notice, .address-map-hint { margin: 0; color: #666e7c; font: 400 10px/1.4 var(--font-jakarta); }
+.saved-address-list { display: grid; gap: 8px; }
+.saved-address-card { position: relative; display: grid; min-height: 89px; grid-template-columns: minmax(0, 1fr) auto; border: 1px solid #dce2ee; border-radius: 13px; background: #fff; box-shadow: 0 1px 3px rgb(18 31 77 / 8%); }
+.saved-address-card.is-default { border: 2px solid #1b295e; background: #fafbff; }
+.saved-address-select { display: grid; min-width: 0; gap: 3px; justify-items: start; padding: 10px 8px 10px 12px; border: 0; background: transparent; color: #1b1b1f; text-align: left; cursor: pointer; }
+.saved-address-title { display: flex; align-items: center; gap: 7px; color: #121b4e; font: 700 12px/1.3 var(--font-jakarta); }
+.saved-address-title em { padding: 2px 6px; border-radius: 999px; background: #d5ff4c; color: #1b295e; font: 700 8px/1.3 var(--font-jakarta); font-style: normal; }
+.saved-address-meta { color: #555d6b; font: 600 9px/1.4 var(--font-jakarta); }
+.saved-address-text, .saved-address-note { max-width: 100%; color: #707786; font: 400 9px/1.4 var(--font-jakarta); }
+.saved-address-delete { align-self: center; margin: 0 9px; padding: 6px 7px; border: 0; border-radius: 8px; background: #f3e4e4; color: #8e2929; font: 600 9px/1 var(--font-jakarta); cursor: pointer; }
+.saved-address-empty { margin: 0; padding: 16px 12px; border: 1px dashed #c9d0df; border-radius: 13px; color: #727887; font: 400 11px/1.5 var(--font-jakarta); text-align: center; }
+.address-book-add-button { min-height: 40px; margin-top: auto; border: 1px dashed #1b295e; border-radius: 11px; background: #f8f9ff; color: #1b295e; font: 700 11px/1 var(--font-jakarta); cursor: pointer; }
+.saved-address-dialog { width: min(370px, calc(100% - 32px)); max-height: min(690px, calc(100dvh - 32px)); margin: auto; padding: 22px 20px 20px; overflow-y: auto; border: 0; border-radius: 20px; background: #fff; box-shadow: 0 18px 50px rgb(18 31 77 / 26%); color: #1b1b1f; font-family: var(--font-jakarta); }
+.saved-address-dialog::backdrop { background: rgb(13 20 52 / 55%); }
+.saved-address-dialog form { display: grid; gap: 7px; }
+.saved-address-dialog h2 { margin: 0; color: #121b4e; font-size: 19px; }
+.saved-address-dialog-help { margin: 0 0 5px; color: #697181; font-size: 11px; line-height: 1.45; }
+.saved-address-dialog label { margin-top: 3px; color: #535b69; font-size: 10px; font-weight: 700; }
+.saved-address-dialog input, .saved-address-dialog select, .saved-address-dialog textarea { box-sizing: border-box; width: 100%; min-height: 39px; padding: 9px 10px; border: 1px solid #dce2ee; border-radius: 9px; outline-color: #435c9b; background: #fff; color: #1b1b1f; font: 12px/1.4 var(--font-jakarta); }
+.saved-address-dialog textarea { min-height: 70px; resize: vertical; }
+.saved-address-dialog-close { position: absolute; top: 13px; right: 15px; width: 30px; height: 30px; border: 0; border-radius: 50%; background: #eef0f5; color: #121b4e; font-size: 22px; line-height: 1; cursor: pointer; }
+.address-save-button { min-height: 44px; margin-top: 8px; border: 0; border-radius: 11px; background: #121b4e; color: #fff; font: 700 12px/1.2 var(--font-jakarta); cursor: pointer; }
+.address-save-button:disabled { opacity: .6; cursor: wait; }
+.address-form-error { margin: 0; color: #a12c2c; font: 500 11px/1.4 var(--font-jakarta); }

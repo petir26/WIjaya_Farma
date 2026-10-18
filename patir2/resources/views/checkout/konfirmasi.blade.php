@@ -24,7 +24,7 @@
                 <p class="confirm-eyebrow">Delivery Address</p>
                 <h2>Alamat Pengiriman</h2>
                 <div class="address-card">
-                    <p id="shipping-address">Jl. Gatot Subroto No. 45,<br>Banjarmasin</p>
+                    <p id="shipping-address">Pilih alamat pengiriman</p>
                     <span class="location-icon" aria-hidden="true"><i></i></span>
                     <a href="{{ route('checkout.address') }}" class="edit-address">Ubah Alamat</a>
                 </div>
@@ -95,6 +95,7 @@
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
         let orderCart = [];
         let paymentMethod = '';
+        let selectedAddressId = null;
         const formatRupiah = (amount) => `Rp ${new Intl.NumberFormat('id-ID').format(amount)}`;
         const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[char]);
         const renderSummary = () => {
@@ -115,10 +116,18 @@
             ]);
             const cartData = await cartResponse.json();
             const profileData = await profileResponse.json();
+            const addressResponse = await fetch('{{ route('client.addresses.index') }}', { headers: { 'Accept': 'application/json' } });
+            const addressData = addressResponse.ok ? await addressResponse.json() : { addresses: [] };
             const prescriptionResponse = await fetch('{{ route('client.prescriptions.index') }}', { headers: { 'Accept': 'application/json' } });
             const prescriptionData = prescriptionResponse.ok ? await prescriptionResponse.json() : { prescriptions: [] };
             if (cartResponse.ok) orderCart = cartData.items;
-            if (profileResponse.ok && profileData.client.address) document.querySelector('#shipping-address').textContent = profileData.client.address;
+            const selectedAddress = addressData.addresses.find((address) => address.is_default) || addressData.addresses[0];
+            if (selectedAddress) {
+                selectedAddressId = selectedAddress.id;
+                document.querySelector('#shipping-address').textContent = `${selectedAddress.label}: ${selectedAddress.address}`;
+            } else if (profileResponse.ok && profileData.client.address) {
+                document.querySelector('#shipping-address').textContent = profileData.client.address;
+            }
             window.availablePrescriptionIds = prescriptionData.prescriptions.map((prescription) => prescription.id);
             renderSummary();
         };
@@ -138,6 +147,11 @@
         document.querySelector('#place-order').addEventListener('click', async () => {
             if (!orderCart.length) { window.location.href = '{{ route('toko') }}'; return; }
             if (!paymentMethod) { paymentDialog.showModal(); return; }
+            if (document.querySelector('[name="fulfillment_method"]:checked').value === 'delivery' && !selectedAddressId) {
+                window.alert('Tambahkan alamat pengiriman terlebih dahulu.');
+                window.location.href = '{{ route('checkout.address') }}';
+                return;
+            }
             const placeOrderButton = document.querySelector('#place-order');
             placeOrderButton.disabled = true;
             try {
@@ -147,6 +161,7 @@
                     body: JSON.stringify({
                         fulfillment_method: document.querySelector('[name="fulfillment_method"]:checked').value,
                         shipping_address: document.querySelector('#shipping-address').textContent.replace(/\s+/g, ' ').trim(),
+                        saved_address_id: selectedAddressId,
                         pharmacy_branch: localStorage.getItem('wijaya-pharmacy-branch') || 'Banjarmasin Tengah',
                         payment_method: paymentMethod,
                         prescription_ids: window.availablePrescriptionIds || [],

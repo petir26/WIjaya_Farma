@@ -21,6 +21,10 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+## Google Maps untuk alamat pengiriman
+
+Tambahkan `GOOGLE_MAPS_API_KEY` ke `.env` untuk mengaktifkan peta interaktif, pencarian alamat, dan pemilihan titik. Aktifkan Maps JavaScript API serta Places API (New) di Google Cloud. Batasi key dengan HTTP referrer aplikasi dan API yang digunakan. Tanpa key, pengguna tetap dapat menyimpan alamat secara manual.
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.

@@ -60,6 +60,11 @@ class User extends Authenticatable
         return $this->hasMany(Prescription::class);
     }
 
+    public function savedAddresses()
+    {
+        return $this->hasMany(SavedAddress::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
