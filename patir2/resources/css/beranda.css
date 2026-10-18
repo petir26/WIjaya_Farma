@@ -1899,6 +1899,58 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
 .history-review-dialog select, .history-review-dialog textarea { padding: 9px; border: 1px solid #d5e4ff; border-radius: 8px; font: 14px/1.4 var(--font-jakarta); }
 .history-review-dialog button { padding: 9px 14px; border: 0; border-radius: 8px; background: #121b4e; color: #fff; cursor: pointer; }
 .history-review-dialog #close-history-review { background: #eef1f8; color: #121b4e; }
+
+/* Purchase history: keep one compact card per transaction, regardless of item count. */
+.purchase-history-card {
+    display: grid;
+    width: min(100%, 335px);
+    height: auto;
+    min-height: 0;
+    gap: 12px;
+    margin: 0 auto 14px;
+    padding: 15px 14px;
+    overflow: visible;
+}
+.purchase-history-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.purchase-history-card .purchase-history-heading h2 { position: static; min-width: 0; overflow: hidden; font: 600 14px/1.3 'Plus Jakarta Sans', sans-serif; text-overflow: ellipsis; white-space: nowrap; }
+.purchase-history-card .purchase-status { position: static; flex: 0 0 auto; font: 500 10px/1.3 'Plus Jakarta Sans', sans-serif; }
+.purchase-history-preview { display: grid; min-width: 0; grid-template-columns: 78px minmax(0, 1fr); align-items: center; gap: 12px; color: inherit; text-decoration: none; }
+.purchase-history-card .purchase-history-image { position: static; width: 78px; height: 78px; border-radius: 12px; background: #f6f7fb; object-fit: contain; }
+.purchase-history-card .purchase-history-details { position: static; min-width: 0; gap: 3px; }
+.purchase-history-card .purchase-history-category { padding: 3px 7px; font-size: 8px; }
+.purchase-history-product-name { max-width: 100%; overflow: hidden; color: #1b1b1f; font: 600 13px/1.3 'Plus Jakarta Sans', sans-serif; text-overflow: ellipsis; white-space: nowrap; }
+.purchase-history-quantity, .purchase-history-extra { color: #767681; font: 500 10px/1.4 'Plus Jakarta Sans', sans-serif; }
+.purchase-history-extra { color: #1b295e; }
+.purchase-history-footer { display: flex; align-items: end; justify-content: space-between; gap: 8px; padding-top: 9px; border-top: 1px solid #edf0f6; }
+.purchase-history-footer > div { display: grid; gap: 3px; }
+.purchase-history-card .purchase-history-footer time { position: static; color: #767681; font: 500 10px/1.3 'Plus Jakarta Sans', sans-serif; }
+.purchase-history-total { color: #04164d; font: 700 12px/1.35 'Plus Jakarta Sans', sans-serif; }
+.purchase-detail-link { flex: 0 0 auto; align-self: end; padding: 9px 12px; border-radius: 9px; background: #d5ff4c; box-shadow: 0 2px 4px rgb(0 0 0 / 14%); color: #1b295e; font: 700 10px/1.2 'Plus Jakarta Sans', sans-serif; text-decoration: none; }
+.purchase-history-actions { position: static; display: flex; flex-direction: row; flex-wrap: wrap; gap: 6px; }
+.purchase-history-actions .purchase-pay-trigger, .purchase-history-actions .purchase-cancel-trigger { width: auto; margin: 0; }
+
+.history-detail-header { display: flex; align-items: end; justify-content: center; }
+.history-detail-header h1 { margin: 10px 0 0; }
+.history-back-link { position: absolute; bottom: 19px; left: 20px; display: inline-flex; align-items: center; gap: 6px; color: #fff; font: 600 13px/1.2 'Plus Jakarta Sans', sans-serif; text-decoration: none; }
+.history-back-link span { font-size: 22px; line-height: .8; }
+.history-detail-content { display: grid; align-content: start; gap: 13px; }
+.history-detail-card { width: min(100%, 335px); margin: 0 auto; padding: 16px; border: 1px solid #879cb5; border-radius: 19px; background: #fff; }
+.history-detail-card h2 { margin: 0 0 12px; color: #121b4e; font: 700 15px/1.35 'Plus Jakarta Sans', sans-serif; }
+.history-detail-summary { display: grid; grid-template-columns: 1fr auto; gap: 9px 12px; margin: 0; font: 500 12px/1.4 'Plus Jakarta Sans', sans-serif; }
+.history-detail-summary dt { color: #767681; }
+.history-detail-summary dd { margin: 0; color: #1b1b1f; text-align: right; }
+.history-detail-summary .history-detail-total { color: #04164d; font-size: 14px; font-weight: 700; }
+.history-detail-items { display: grid; gap: 13px; }
+.history-detail-item { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid #dfe4ee; }
+.history-detail-item + .history-detail-item { padding-top: 12px; }
+.history-detail-item:last-child { padding-bottom: 0; border-bottom: 0; }
+.history-detail-item img { width: 64px; height: 64px; border-radius: 10px; background: #f6f7fb; object-fit: contain; }
+.history-detail-item h3 { margin: 0 0 4px; color: #1b1b1f; font: 600 12px/1.35 'Plus Jakarta Sans', sans-serif; }
+.history-detail-item p { margin: 0; color: #767681; font: 500 10px/1.4 'Plus Jakarta Sans', sans-serif; }
+.history-detail-item strong { color: #04164d; font: 700 11px/1.35 'Plus Jakarta Sans', sans-serif; text-align: right; }
+.history-detail-prescription { display: block; margin-top: 8px; color: #1b295e; font: 600 11px/1.4 'Plus Jakarta Sans', sans-serif; }
+.history-detail-note { margin: 0; color: #767681; font: 400 11px/1.5 'Plus Jakarta Sans', sans-serif; }
+
 @media (max-width: 360px) {
     .customer-service-header h1 { left: 64px; font-size: 19px; }
     .quick-help-grid { left: 25px; width: calc(100% - 50px); gap: 12px 10px; }

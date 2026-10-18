@@ -38,29 +38,37 @@
             <section class="history-panel" id="purchases-panel" role="tabpanel" aria-labelledby="purchases-tab">
                 @forelse ($orders as $order)
                     <article class="purchase-history-card">
-                        <h2>Order #{{ $order->order_number }}</h2>
-                        <div class="purchase-status"><span>{{ ucfirst(str_replace('_', ' ', $order->status)) }}</span><span class="purchase-status-check" aria-hidden="true">✓</span></div>
-                        @foreach ($order->items as $item)
-                            <img class="purchase-history-image" src="{{ $item->product?->image ? asset('images/'.$item->product->image) : asset('images/riwayat/paracetamol.png') }}" alt="{{ $item->product_name }}">
-                            <div class="purchase-history-details">
-                                <span class="purchase-history-category">{{ $item->product?->category ?? 'PRODUK' }}</span>
-                                <h3>{{ $item->product_name }}</h3>
-                                <p>{{ $item->product_package }} × {{ $item->quantity }}</p>
-                                <strong>Rp {{ number_format((float) $item->subtotal, 0, ',', '.') }}</strong>
-                            </div>
-                        @endforeach
-                        <time datetime="{{ $order->created_at->toDateString() }}">{{ $order->created_at->translatedFormat('d F Y') }}</time>
+                        @php($firstItem = $order->items->first())
+                        <div class="purchase-history-heading">
+                            <h2>Order #{{ $order->order_number }}</h2>
+                            <div class="purchase-status"><span>{{ ucfirst(str_replace('_', ' ', $order->status)) }}</span><span class="purchase-status-check" aria-hidden="true">✓</span></div>
+                        </div>
+                        @if ($firstItem)
+                            <a class="purchase-history-preview" href="{{ route('riwayat.detail', $order->id) }}">
+                                <img class="purchase-history-image" src="{{ $firstItem->product?->image ? asset('images/'.$firstItem->product->image) : asset('images/riwayat/paracetamol.png') }}" alt="{{ $firstItem->product_name }}">
+                                <span class="purchase-history-details">
+                                    <span class="purchase-history-category">{{ $firstItem->product?->category ?? 'PRODUK' }}</span>
+                                    <strong class="purchase-history-product-name">{{ $firstItem->product_name }}</strong>
+                                    <span class="purchase-history-quantity">{{ $firstItem->product_package }} × {{ $firstItem->quantity }}</span>
+                                    @if ($order->items->count() > 1)
+                                        <span class="purchase-history-extra">+{{ $order->items->count() - 1 }} produk lainnya</span>
+                                    @endif
+                                </span>
+                            </a>
+                        @endif
                         @if ($order->status === 'menunggu_pembayaran')
                             <div class="purchase-history-actions">
                                 <button type="button" class="purchase-pay-trigger" data-show-qr>Bayar</button>
                                 <button type="button" class="purchase-cancel-trigger" data-cancel-order-id="{{ $order->id }}">Batalkan Pesanan</button>
                             </div>
                         @endif
-                        @if ($order->status === 'selesai')
-                            @foreach ($order->items as $item)
-                                <button type="button" class="purchase-review-trigger" data-review-item-id="{{ $item->id }}" data-review-name="{{ $item->product_name }}">Beri Penilaian</button>
-                            @endforeach
-                        @endif
+                        <div class="purchase-history-footer">
+                            <div>
+                                <time datetime="{{ $order->created_at->toDateString() }}">{{ $order->created_at->translatedFormat('d F Y') }}</time>
+                                <strong class="purchase-history-total">Total Rp {{ number_format((float) $order->total_amount, 0, ',', '.') }}</strong>
+                            </div>
+                            <a class="purchase-detail-link" href="{{ route('riwayat.detail', $order->id) }}">Detail Pesanan</a>
+                        </div>
                     </article>
                 @empty
                     <p class="history-empty">Belum ada transaksi pembelian.</p>

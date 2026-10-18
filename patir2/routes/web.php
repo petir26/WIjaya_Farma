@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profil', [ProfileController::class, 'update'])->name('profil.update');
     Route::view('/konsultasi', 'konsultasi')->name('konsultasi');
     Route::get('/riwayat', [HistoryController::class, 'index'])->name('riwayat');
+    Route::get('/riwayat/{order}', [HistoryController::class, 'showOrder'])->whereNumber('order')->name('riwayat.detail');
     Route::view('/customer-service', 'customer-service')->name('customer-service');
     Route::view('/customer-service/chat', 'customer-service-chat')->name('customer-service.chat');
     Route::get('/konsultasi/chat/{dokter}', function (string $dokter) {
