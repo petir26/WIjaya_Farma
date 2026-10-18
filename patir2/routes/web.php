@@ -72,6 +72,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/consultations', [ConsultationController::class, 'index'])->name('consultations.index');
         Route::post('/consultations', [ConsultationController::class, 'store'])->name('consultations.store');
         Route::get('/consultations/{consultation}', [ConsultationController::class, 'show'])->name('consultations.show');
+        Route::get('/consultation-messages/{message}/attachment', [ConsultationController::class, 'attachment'])->name('consultations.messages.attachment');
         Route::post('/consultations/{consultation}/messages', [ConsultationController::class, 'sendMessage'])->name('consultations.messages.store');
         Route::delete('/consultations/{consultation}', [ConsultationController::class, 'destroy'])->name('consultations.destroy');
         Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');

@@ -42,8 +42,9 @@
             <div class="chat-input-wrap">
                 <label class="visually-hidden" for="chat-message">Ketik pesan</label>
                 <input id="chat-message" type="text" placeholder="Ketik pesan..." autocomplete="off">
-                <input class="visually-hidden" id="chat-attachment" type="file" aria-label="Pilih lampiran">
+                <input class="visually-hidden" id="chat-attachment" type="file" accept="image/*" aria-label="Pilih foto">
                 <input class="visually-hidden" id="chat-camera" type="file" accept="image/*" capture="environment" aria-label="Ambil foto">
+                <span class="chat-attachment-status" id="chat-attachment-status" aria-live="polite"></span>
                 <button class="chat-attachment-button" type="button" data-file-input="chat-attachment" aria-label="Lampirkan file">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8.5 12.5 7.1-7.1a3.5 3.5 0 0 1 4.9 5l-9.4 9.4a5 5 0 0 1-7.1-7.1l9-9" /></svg>
                 </button>
@@ -84,6 +85,8 @@
         const chatForm = document.querySelector('#chat-form');
         const chatMessage = document.querySelector('#chat-message');
         const chatStream = document.querySelector('#chat-stream');
+        const attachmentInputs = [document.querySelector('#chat-attachment'), document.querySelector('#chat-camera')];
+        const attachmentStatus = document.querySelector('#chat-attachment-status');
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
         let consultationId = new URLSearchParams(window.location.search).get('consultation');
         let chatMessages = [];
@@ -92,9 +95,20 @@
             chatMessages = messages || [];
             chatStream.replaceChildren();
             chatMessages.forEach((item) => {
-                const bubble = document.createElement('p');
+                const bubble = document.createElement('div');
                 bubble.className = item.sender_type === 'doctor' ? 'chat-incoming-message' : 'chat-outgoing-message';
-                bubble.textContent = item.message;
+                if (item.message) {
+                    const text = document.createElement('span');
+                    text.textContent = item.message;
+                    bubble.append(text);
+                }
+                if (item.attachment_url) {
+                    const image = document.createElement('img');
+                    image.src = item.attachment_url;
+                    image.alt = 'Foto yang dikirim';
+                    image.loading = 'lazy';
+                    bubble.append(image);
+                }
                 chatStream.append(bubble);
             });
             chatStream.scrollTop = chatStream.scrollHeight;
@@ -112,7 +126,8 @@
         chatForm.addEventListener('submit', async (event) => {
             event.preventDefault();
             const message = chatMessage.value.trim();
-            if (!message) return;
+            const attachment = attachmentInputs.find((input) => input.files?.[0])?.files[0];
+            if (!message && !attachment) return;
 
             const sendButton = chatForm.querySelector('[type="submit"]');
             sendButton.disabled = true;
@@ -121,18 +136,22 @@
                 const endpoint = consultationId 
                     ? `{{ url('/client/consultations') }}/${consultationId}/messages` 
                     : '{{ route('client.consultations.store') }}';
-                const body = consultationId 
-                    ? { message } 
-                    : { doctor_name: 'Customer Service', complaint: message };
+                const body = new FormData();
+                if (consultationId) {
+                    if (message) body.append('message', message);
+                } else {
+                    body.append('doctor_name', 'Customer Service');
+                    body.append('complaint', message || 'Foto terlampir');
+                }
+                if (attachment) body.append('attachment', attachment);
 
                 const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
-                        'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': csrfToken
                     },
-                    body: JSON.stringify(body)
+                    body
                 });
 
                 const result = await response.json();
@@ -152,6 +171,8 @@
                 }
 
                 chatMessage.value = '';
+                attachmentInputs.forEach((input) => { input.value = ''; });
+                attachmentStatus.textContent = '';
                 chatMessage.focus();
             } catch (error) {
                 window.alert('Gagal menghubungi server. Silahkan periksa koneksi.');
@@ -162,6 +183,15 @@
 
         document.querySelectorAll('[data-file-input]').forEach((button) => {
             button.addEventListener('click', () => document.getElementById(button.dataset.fileInput).click());
+        });
+        attachmentInputs.forEach((input) => {
+            input.addEventListener('change', () => {
+                if (input.files?.[0]) {
+                    attachmentInputs.filter((other) => other !== input).forEach((other) => { other.value = ''; });
+                }
+                const selectedFile = attachmentInputs.find((other) => other.files?.[0])?.files[0];
+                attachmentStatus.textContent = selectedFile ? `Foto terlampir: ${selectedFile.name}` : '';
+            });
         });
     </script>
 </body>

@@ -858,7 +858,7 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
 .checkout-footer strong { color: #04164d; font-size: 17px; }
 .checkout-confirm { min-width: 132px; margin: 0; padding: 0 14px; }
 .checkout-confirm:disabled { opacity: .48; cursor: not-allowed; }
-.delete-dialog { width: min(310px, calc(100% - 48px)); padding: 25px 22px 20px; border: 1px solid rgb(75 118 170 / 62%); border-radius: 20px; font-family: var(--font-jakarta); }
+.delete-dialog { position: fixed; top: 50%; left: 50%; width: min(310px, calc(100% - 48px)); margin: 0; padding: 25px 22px 20px; transform: translate(-50%, -50%); border: 1px solid rgb(75 118 170 / 62%); border-radius: 20px; font-family: var(--font-jakarta); }
 .delete-dialog::backdrop { background: rgb(12 20 51 / 58%); backdrop-filter: blur(2px); }
 .delete-dialog h2 { margin: 0 0 8px; color: #121b4e; font-size: 18px; }
 .delete-dialog p { margin: 0 0 20px; color: var(--color-muted); font-size: 13px; line-height: 1.5; }
@@ -1103,6 +1103,9 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
 .doctor-chat-stream::-webkit-scrollbar { display: none; }
 
 .chat-outgoing-message {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
     max-width: min(78%, 260px);
     margin: 0;
     padding: 10px 13px;
@@ -1112,7 +1115,8 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
     font: 400 14px/1.45 'Poppins', sans-serif;
     overflow-wrap: anywhere;
 }
-.chat-incoming-message { max-width: min(78%, 260px); margin: 0 auto 0 0; padding: 10px 13px; border-radius: 19px 19px 19px 5px; background: #e7eaf2; color: #1b1b1f; font: 400 14px/1.45 'Poppins', sans-serif; overflow-wrap: anywhere; }
+.chat-incoming-message { display: flex; flex-direction: column; gap: 7px; max-width: min(78%, 260px); margin: 0 auto 0 0; padding: 10px 13px; border-radius: 19px 19px 19px 5px; background: #e7eaf2; color: #1b1b1f; font: 400 14px/1.45 'Poppins', sans-serif; overflow-wrap: anywhere; }
+.chat-outgoing-message img, .chat-incoming-message img { display: block; width: min(100%, 240px); max-height: 240px; border-radius: 12px; object-fit: contain; }
 
 .doctor-chat-composer {
     position: absolute;
@@ -1178,6 +1182,7 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
 .chat-camera-button { right: 19px; }
 .chat-attachment-button svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
 .chat-camera-button svg { width: 25px; height: 25px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+.chat-attachment-status { position: absolute; top: 46px; left: 10px; max-width: calc(100% - 20px); overflow: hidden; color: #606575; font: 400 10px/14px var(--font-jakarta); text-overflow: ellipsis; white-space: nowrap; }
 
 .chat-send-button {
     width: 31px;
@@ -1456,11 +1461,11 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
 
 .consultation-history-time {
     position: absolute;
-    top: 17px;
-    right: 8px;
+    bottom: 10px;
+    left: 15px;
     margin: 0;
     color: #111;
-    font: 300 16px/21px 'Poppins', sans-serif;
+    font: 300 11px/15px 'Poppins', sans-serif;
 }
 
 .consultation-history-status {
@@ -1491,15 +1496,15 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
 
 .consultation-history-message {
     position: absolute;
-    top: 71px;
+    top: 91px;
     left: 15px;
-    display: flex;
     width: calc(100% - 30px);
-    height: 68px;
-    align-items: center;
+    height: 31px;
+    overflow: hidden;
     margin: 0;
     color: #111;
     font: 300 10px/1.4 'Poppins', sans-serif;
+    overflow-wrap: anywhere;
 }
 
 .consultation-unread-count {
@@ -1529,7 +1534,7 @@ body.address-picker-page { display: flex; min-width: 320px; min-height: 100vh; a
     .purchase-history-details { left: 55%; }
     .history-screen .nav-tab.active { width: 75px; }
     .consultation-history-card h2 { font-size: 16px; }
-    .consultation-history-time { font-size: 12px; }
+    .consultation-history-time { font-size: 10px; }
     .consultation-history-specialty { font-size: 14px; }
 }
 
