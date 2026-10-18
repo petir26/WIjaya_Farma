@@ -11,13 +11,31 @@ use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\PrescriptionController;
 use App\Http\Controllers\Client\ReviewController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\StoreController;
+use Illuminate\Http\Request;
 
 Route::redirect('/', '/beranda');
 
-Route::view('/beranda', 'beranda')->name('beranda');
+Route::get('/beranda', function (Request $request) {
+    if ($request->user()?->role === 'admin') {
+        return redirect()->route('admin.toko');
+    }
+
+    return view('beranda');
+})->name('beranda');
 Route::get('/toko', [StoreController::class, 'index'])->name('toko');
 Route::get('/informasi-obat/{obat}', [StoreController::class, 'showMedicine'])->name('informasi-obat.show');
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/toko', [AdminProductController::class, 'index'])->name('toko');
+    Route::get('/obat/tambah', [AdminProductController::class, 'create'])->name('products.create');
+    Route::post('/obat', [AdminProductController::class, 'store'])->name('products.store');
+    Route::get('/obat/{product}/edit', [AdminProductController::class, 'edit'])->name('products.edit');
+    Route::patch('/obat/{product}', [AdminProductController::class, 'update'])->name('products.update');
+    Route::patch('/obat/{product}/stok', [AdminProductController::class, 'updateStock'])->name('products.stock');
+    Route::delete('/obat/{product}', [AdminProductController::class, 'destroy'])->name('products.destroy');
+});
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -26,11 +44,13 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'registerClient'])->name('register.store');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'admin.interface'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/profil', [ProfileController::class, 'show'])->name('profil');
     Route::patch('/profil', [ProfileController::class, 'update'])->name('profil.update');
-    Route::view('/konsultasi', 'konsultasi')->name('konsultasi');
+    Route::get('/konsultasi', fn (Request $request) => $request->user()->role === 'admin'
+        ? redirect()->route('admin.toko')
+        : view('konsultasi'))->name('konsultasi');
     Route::get('/riwayat', [HistoryController::class, 'index'])->name('riwayat');
     Route::get('/riwayat/{order}', [HistoryController::class, 'showOrder'])->whereNumber('order')->name('riwayat.detail');
     Route::view('/customer-service', 'customer-service')->name('customer-service');
@@ -72,6 +92,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/consultations', [ConsultationController::class, 'index'])->name('consultations.index');
         Route::post('/consultations', [ConsultationController::class, 'store'])->name('consultations.store');
         Route::get('/consultations/{consultation}', [ConsultationController::class, 'show'])->name('consultations.show');
+        Route::get('/consultation-messages/{message}/attachment', [ConsultationController::class, 'attachment'])->name('consultations.messages.attachment');
         Route::post('/consultations/{consultation}/messages', [ConsultationController::class, 'sendMessage'])->name('consultations.messages.store');
         Route::delete('/consultations/{consultation}', [ConsultationController::class, 'destroy'])->name('consultations.destroy');
         Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');

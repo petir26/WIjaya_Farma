@@ -78,7 +78,7 @@
 
             <section class="home-articles" aria-labelledby="home-articles-title">
                 <h2 id="home-articles-title">Artikel Kesehatan</h2>
-                <a class="home-article-card" href="{{ route('toko') }}" aria-label="Manfaat Buah-Buahan Untuk Kesehatan" style="background-image: url('{{ asset('images/article-fruits.png') }}');">
+                <a class="home-article-card" href="https://keslan.kemkes.go.id/view_artikel/2682/berbagai-manfaat-buah-buahan" target="_blank" rel="noopener noreferrer" aria-label="Manfaat Buah-Buahan Untuk Kesehatan" style="background-image: url('{{ asset('images/article-fruits.png') }}');">
                     <span class="home-article-overlay"></span>
                     <span class="home-article-content">
                         <span class="home-badge">TIPS NUTRISI</span>

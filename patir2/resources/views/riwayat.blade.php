@@ -87,12 +87,12 @@
                             <img class="consultation-history-avatar" src="{{ $avatarSrc }}" alt="" @if($isCS) style="object-fit: contain; padding: 3px; background: rgba(30, 45, 99, 0.1);" @endif>
                             <h2>{{ $consultation->doctor_name }}</h2>
                             <p class="consultation-history-specialty">{{ $isCS ? 'Admin Support' : 'Dokter Umum' }}</p>
-                            <p class="consultation-history-time">{{ $consultation->updated_at->format('H.i') }} WITA</p>
                             <div class="consultation-history-status consultation-history-status--sent">
                                 <span class="consultation-status-dot" aria-hidden="true"></span>
                                 <span>{{ ucfirst(str_replace('_', ' ', $consultation->status)) }}</span>
                             </div>
                             <p class="consultation-history-message">{{ $consultation->messages->first()?->message ?? $consultation->complaint }}</p>
+                            <time class="consultation-history-time" datetime="{{ $consultation->updated_at->toIso8601String() }}">{{ $consultation->updated_at->format('H.i') }} WITA</time>
                         </a>
                     @empty
                         <p class="history-empty">Belum ada riwayat konsultasi.</p>

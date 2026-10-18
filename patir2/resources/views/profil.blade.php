@@ -25,9 +25,11 @@
                 </span>
             </div>
             <h1>Profil</h1>
+            @if (auth()->user()->role !== 'admin')
             <a class="profile-support-link" href="{{ route('customer-service') }}" aria-label="Buka Customer Service">
                 <img class="profile-support-icon" src="{{ asset('images/support.png') }}" alt="">
             </a>
+            @endif
         </header>
 
         <main class="profile-content">
@@ -99,7 +101,13 @@
             </form>
         </main>
 
-        <nav class="beranda-bottom-nav" aria-label="Navigasi utama">
+        <nav class="beranda-bottom-nav" aria-label="{{ auth()->user()->role === 'admin' ? 'Navigasi admin' : 'Navigasi utama' }}">
+            @if (auth()->user()->role === 'admin')
+            <a class="nav-tab" href="{{ route('admin.toko') }}">
+                <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M3 5h4l3.5 18.5a4 4 0 0 0 4 3.2h17a4 4 0 0 0 3.9-3l3.1-12.3H9" /><circle cx="15" cy="33" r="2.8" /><circle cx="31" cy="33" r="2.8" /></svg>
+                <span>Toko</span>
+            </a>
+            @else
             <a class="nav-tab" href="{{ route('beranda') }}">
                 <svg viewBox="0 0 32 32" aria-hidden="true"><path d="m3 14 13-11 13 11v14H19v-9h-6v9H3z" /></svg>
                 <span>Beranda</span>
@@ -116,6 +124,7 @@
                 <svg viewBox="0 0 36 36" aria-hidden="true"><path d="M3 6c6-2 11-1 15 2 4-3 9-4 15-2v24c-6-2-11-1-15 2-4-3-9-4-15-2zM18 8v24" /></svg>
                 <span>Riwayat</span>
             </a>
+            @endif
             <a class="nav-tab active" href="{{ route('profil') }}" aria-current="page">
                 <svg class="profile-icon" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="11" r="6" /><path d="M5 32a13 13 0 0 1 26 0z" /></svg>
                 <span>Profil</span>

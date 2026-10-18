@@ -20,6 +20,8 @@ class ExampleTest extends TestCase
             ->assertSee('<h1>Beranda</h1>', false)
             ->assertSee('Kategori Obat Populer')
             ->assertSee('Artikel Kesehatan')
+            ->assertSee('href="https://keslan.kemkes.go.id/view_artikel/2682/berbagai-manfaat-buah-buahan"', false)
+            ->assertSee('target="_blank" rel="noopener noreferrer"', false)
             ->assertSee(route('toko'));
     }
 

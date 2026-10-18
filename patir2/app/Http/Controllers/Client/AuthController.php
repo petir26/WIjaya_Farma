@@ -25,6 +25,10 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
+        if ($request->user()->role === 'admin') {
+            return redirect()->route('admin.toko');
+        }
+
         return redirect()->intended(route('beranda'));
     }
 
@@ -36,7 +40,9 @@ class AuthController extends Controller
             'password' => ['required', 'confirmed', Password::min(8)],
         ]);
 
-        $client = User::create($data);
+        $client = new User($data);
+        $client->role = 'user';
+        $client->save();
         Auth::login($client);
         $request->session()->regenerate();
 
